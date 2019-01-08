@@ -1,23 +1,44 @@
+require('dotenv').config()
 const ejs = require("ejs");
 const fs = require("fs");
 const puppeteer = require("puppeteer");
 const express = require("express");
+const AWS = require('aws-sdk');
+const nodemailer = require('nodemailer')
 
 const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 const port = 3000;
 
-const password = process.env.PASSWORD;
-const send = require("gmail-send")({
-        user: "resumebuildernoreply@gmail.com",
-        pass: password,
-        to: "katsnelson.lizz@gmail.com",
-        subject: "Here is your resume",
-        text: "now go get a job",
-        files: "./resume.pdf"
-      });
+const ses = new AWS.SES();
+const transporter = nodemailer.createTransport({
+    SES: ses
+});
 
+function sendEmailNodemailer (event, context, callback) {
+  const mailOptions = {
+    from: 'resumebuildernoreply@gmail.com',
+    subject: "Your Resume is Here!",
+    html: `<p>Good Luck!</p>`,
+    to: process.env.EMAIL,
+    attachments: [{filename:'resume.pdf', path: './resume.pdf'}]
+  }
+
+  transporter.sendMail(mailOptions, function (err, info) {
+      if (err) {
+          console.log("Error sending email");
+          callback(err);
+      } else {
+          console.log("Email sent successfully");
+          callback();
+      }
+    callback(null, 'Hello from ResumeBuilder');
+    })
+  }
+
+
+app.get('/', (req, res) => {res.send("Welcome to resume builder")});
 
 app.post("/generatePDF", (req, res) => {
   const props = req.body;
@@ -41,10 +62,8 @@ app.post("/generatePDF", (req, res) => {
     );
     await page.pdf({ path: "resume.pdf", format: "A4" });
     await browser.close();
-    send({subject: 'Here is your resume!'}, function (err, r) {
-      res.sendStatus(200);
-    })
-  }
-});
+    sendEmailNodemailer()
+    }
+  });
 
 app.listen(port, () => console.log(`NASA listening on port ${port}!`));

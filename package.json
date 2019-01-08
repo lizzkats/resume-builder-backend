@@ -9,10 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.384.0",
     "body-parser": "^1.18.3",
+    "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "gmail-send": "^1.2.14",
+    "nodemailer": "^5.0.0",
     "puppeteer": "^1.11.0"
   }
 }
