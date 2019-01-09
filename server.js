@@ -4,11 +4,15 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const express = require("express");
 const AWS = require('aws-sdk');
-const nodemailer = require('nodemailer')
+const nodemailer = require('nodemailer');
+var cors = require('cors');
+
 
 const app = express();
 const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 const port = 3000;
 
 const ses = new AWS.SES();
@@ -39,6 +43,7 @@ app.get('/', (req, res) => {res.send("Welcome to resume builder")});
 
 app.post("/generatePDF", (req, res) => {
   const props = req.body;
+  console.log(req.body)
   let email = ejs.renderFile("./resume.ejs", props, function(err, data) {
     console.log(err || data);
     fs.writeFile("index.html", data, err => {
@@ -46,7 +51,7 @@ app.post("/generatePDF", (req, res) => {
         throw err;
       }
       console.log("wrote file");
-      makePDFandEmail();
+      // makePDFandEmail();
     });
   });
 
