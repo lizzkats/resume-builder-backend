@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
     SES: ses
 });
 
-function sendEmailNodemailer (event, context, callback) {
+function sendEmailNodemailer (event, context) {
   const mailOptions = {
     from: 'resumebuildernoreply@gmail.com',
     subject: "Your Resume is Here!",
@@ -28,12 +28,9 @@ function sendEmailNodemailer (event, context, callback) {
   transporter.sendMail(mailOptions, function (err, info) {
       if (err) {
           console.log("Error sending email");
-          callback(err);
       } else {
           console.log("Email sent successfully");
-          callback();
       }
-    callback(null, 'Hello from ResumeBuilder');
     })
   }
 
@@ -64,6 +61,7 @@ app.post("/generatePDF", (req, res) => {
     await browser.close();
     sendEmailNodemailer()
     }
+    res.send('Sending your email now')
   });
 
 app.listen(port, () => console.log(`NASA listening on port ${port}!`));
