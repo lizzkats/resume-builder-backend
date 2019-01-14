@@ -71,4 +71,4 @@ app.post("/generatePDF", (req, res) => {
     res.send('Sending your email now')
   });
 
-app.listen(port, () => console.log(`NASA listening on port ${port}!`));
+app.listen(process.env.PORT, || port);
