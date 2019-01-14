@@ -6,7 +6,9 @@ const express = require("express");
 const AWS = require('aws-sdk');
 const nodemailer = require('nodemailer');
 var cors = require('cors');
-
+const path = require('path');
+const tmpPath = path.join('file://', __dirname, 'tmp/index.html')
+console.log(tmpPath)
 
 const app = express();
 const bodyParser = require("body-parser");
@@ -46,7 +48,7 @@ app.post("/generatePDF", (req, res) => {
   console.log(req.body)
   let email = ejs.renderFile("./resume.ejs", props, function(err, data) {
     console.log(err || data);
-    fs.writeFile("index.html", data, err => {
+    fs.writeFile("tmp/index.html", data, err => {
       if (err) {
         throw err;
       }
@@ -59,7 +61,7 @@ app.post("/generatePDF", (req, res) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(
-      "file:///Users/Lizz/Documents/Dev/resume-builder-backend/index.html",
+     tmpPath,
       { waitUntil: "networkidle2" }
     );
     await page.pdf({ path: "resume.pdf", format: "A4" });

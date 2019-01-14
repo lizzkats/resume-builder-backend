@@ -17,6 +17,7 @@
     "express": "^4.16.4",
     "gmail-send": "^1.2.14",
     "nodemailer": "^5.0.0",
+    "path": "^0.12.7",
     "puppeteer": "^1.11.0"
   }
 }
