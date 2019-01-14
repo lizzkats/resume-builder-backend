@@ -71,8 +71,4 @@ app.post("/generatePDF", (req, res) => {
     res.send('Sending your email now')
   });
 
-<<<<<<< HEAD
 app.listen(process.env.PORT || port);
-=======
-app.listen(process.env.PORT, || port);
->>>>>>> 77ab088a7caf81addc3ea4079c2c9005868581ec
