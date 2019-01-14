@@ -51,7 +51,7 @@ app.post("/generatePDF", (req, res) => {
         throw err;
       }
       console.log("wrote file");
-      // makePDFandEmail();
+      makePDFandEmail();
     });
   });
 
